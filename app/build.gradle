@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+           // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.21.6'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply from: '../api.gradle'
+apply from: '../versions.gradle'
+
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.havrylyuk.socialnetworks"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "TWITTER_KEY", "\"$TWITTER_KEY\""
+        buildConfigField "String", "TWITTER_KEY_SECRET", "\"$TWITTER_KEY_SECRET\""
+        resValue "string", "TWITTER_FABRIC_KEY", "\"$TWITTER_FABRIC_KEY\""
+        resValue "string", "FACEBOOK_APP_ID", "\"$FACEBOOK_APP_ID\""
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:multidex:$multiDexVersion"
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+
+    compile "com.squareup.picasso:picasso:$picassoVersion"
+
+    compile "org.greenrobot:eventbus:$eventBusVersion"
+
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    compile "com.google.android.gms:play-services-plus:$playServicesVersion"
+
+    compile "com.facebook.android:facebook-android-sdk:$facebookVersion"
+    compile("com.twitter.sdk.android:twitter:$twitterVersion") {
+        transitive = true;
+    }
+
+    testCompile "junit:junit:$junitVersion"
+}
